@@ -1,0 +1,19 @@
+###for loop:
+{% for post in posts %}
+    <h1>{{post.title}}</h1>
+    <p>By {{ post.author }} on {{post.date_posted}}</p>
+    <p>{{post.content}}</p>
+{% endfor %}
+
+###if statement:
+{% if title %}
+<title>Flask Blog - {{ title }}</title>
+{% else %}
+<title>Home</title>
+{% endif %}
+
+####layout
+<!--###this is template inheritance to remove duplicate code-->
+<!--remove anything repeating from the other HTMLS.
+it will be pulled from here. Only leave the code that has to go
+between {% block content %}{% endblock %}-->
