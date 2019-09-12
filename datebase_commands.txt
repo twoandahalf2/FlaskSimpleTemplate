@@ -47,6 +47,9 @@ Post('Blog 1', '2019-09-12 11:52:29.619122')
 >>> db.create_all()
 
 
+>>>from flaskblog.models import User, Post
+
+
 
 
 
