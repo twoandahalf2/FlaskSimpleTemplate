@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, flash, redirect
+from flask_sqlalchemy import SQLAlchemy
 from forms import RegistrationForm, LoginForm
-
+from datetime import datetime
 
 ###to run FLASK WEB SERVER:
 #execute command to register as env variables. second one refreshes the server live
@@ -12,6 +13,34 @@ from forms import RegistrationForm, LoginForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'be55d207f7a71bdaf2d529cbb90d4f3a'
+###this creates a DB in local directory. Run db.create_all() in terminal to create the DB
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+##this creates an instance
+db = SQLAlchemy(app)
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    image_file = db.Column(db.String(20), unique=False, nullable=False, default='default.jpg')
+    password = db.Column(db.String(60), nullable=False)
+    posts = db.relationship('Post', backref='author', lazy=True)
+
+    def __repr__(self):
+        return f"User('{self.username}', '{self.email}', '{self.image_file}')"
+
+###ID from User is foreign key for Post
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    content = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    def __repr__(self):
+        return f"Post('{self.title}', '{self.date_posted}')"
+
 
 posts = [
     {
